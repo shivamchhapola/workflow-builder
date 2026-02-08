@@ -3,7 +3,6 @@
 import {
   ReactFlow,
   Background,
-  Controls,
   useNodesState,
   useEdgesState,
   addEdge,
@@ -11,11 +10,27 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useCallback } from 'react';
-import ReactFlowControls from './components/ReactFlowControls';
+import ReactFlowControls from './components/flow/ReactFlowControls';
+import AddNode from './components/flow/AddNode';
+import CustomNode from './components/flow/CustomNode';
+
+const nodeTypes = {
+  custom: CustomNode,
+};
 
 const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
-  { id: '2', position: { x: 200, y: 100 }, data: { label: 'Node 2' } },
+  {
+    id: '1',
+    type: 'custom',
+    position: { x: 100, y: 100 },
+    data: {
+      label: 'Processor',
+      inputs: 3,
+      outputs: 2,
+      width: 200,
+      height: 100,
+    },
+  },
 ];
 
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
@@ -40,8 +55,15 @@ export default function Page() {
         ...nds,
         {
           id,
+          type: 'custom',
           position: { x: 100 + offset, y: 100 + offset },
-          data: { label: `Node ${nds.length + 1}` },
+          data: {
+            label: `Node ${nds.length + 1}`,
+            inputs: 2,
+            outputs: 2,
+            width: 160,
+            height: 80,
+          },
         },
       ];
     });
@@ -50,6 +72,7 @@ export default function Page() {
   return (
     <div className="relative h-screen w-screen">
       <ReactFlow
+        nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -61,11 +84,7 @@ export default function Page() {
         <ReactFlowControls />
       </ReactFlow>
 
-      <button
-        onClick={addNode}
-        className="absolute top-4 left-4 rounded bg-blue-500 px-4 py-2 text-white cursor-pointer">
-        Add Node
-      </button>
+      <AddNode addNode={addNode} />
     </div>
   );
 }
