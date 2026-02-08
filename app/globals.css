@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+:root {
+  --primary: #6965db;
+  --primary-hover: #5b57d1;
+  --primary-soft: #f1f0ff;
+  --primary-border: #c8c6f5;
+  --primary-muted: #8c89e8;
+}
+
 html,
 body {
   height: 100%;

@@ -74,17 +74,6 @@ const ReactFlowControls = () => {
           </button>
         </TooltipWrapper>
       </div>
-
-      <div className="flex items-center justify-center rounded-md bg-[#f1f2f6] shadow-[0px_0px_10px_rgba(0,0,0,0.075)]">
-        <TooltipWrapper tooltip="Fit to Screen">
-          <button
-            onClick={handleFitToScreen}
-            className="flex size-9 items-center justify-center rounded hover:bg-black/5"
-            aria-label="Fit to Screen">
-            <MdFitScreen />
-          </button>
-        </TooltipWrapper>
-      </div>
     </div>
   );
 };

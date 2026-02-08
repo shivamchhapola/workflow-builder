@@ -12,23 +12,30 @@ import '@xyflow/react/dist/style.css';
 import { useCallback } from 'react';
 import ReactFlowControls from './components/flow/ReactFlowControls';
 import AddNode from './components/flow/AddNode';
-import CustomNode from './components/flow/CustomNode';
+import CustomNode, { CustomNodeData } from './components/flow/CustomNode';
 
 const nodeTypes = {
   custom: CustomNode,
 };
 
-const initialNodes = [
+type CustomNodeType = {
+  id: string;
+  type: 'custom';
+  position: { x: number; y: number };
+  data: CustomNodeData;
+};
+
+const initialNodes: CustomNodeType[] = [
   {
     id: '1',
     type: 'custom',
-    position: { x: 100, y: 100 },
+    position: { x: 0, y: 0 },
     data: {
-      label: 'Processor',
-      inputs: 3,
-      outputs: 2,
-      width: 200,
-      height: 100,
+      label: 'Entry',
+      inputs: [],
+      outputs: ['Result', 'Error'],
+      width: 100,
+      height: 50,
     },
   },
 ];
@@ -46,28 +53,31 @@ export default function Page() {
     [setEdges]
   );
 
-  const addNode = useCallback(() => {
-    setNodes((nds) => {
-      const id = crypto.randomUUID();
-      const offset = nds.length * 40;
+  const addNode = useCallback(
+    (data: CustomNodeData) => {
+      setNodes((nds: CustomNodeType[]) => {
+        const id = crypto.randomUUID();
+        const offset = nds.length * 40;
 
-      return [
-        ...nds,
-        {
-          id,
-          type: 'custom',
-          position: { x: 100 + offset, y: 100 + offset },
-          data: {
-            label: `Node ${nds.length + 1}`,
-            inputs: 2,
-            outputs: 2,
-            width: 160,
-            height: 80,
+        return [
+          ...nds,
+          {
+            id,
+            type: 'custom',
+            position: { x: 100 + offset, y: 100 + offset },
+            data: {
+              label: data.label ?? `Node ${nds.length + 1}`,
+              inputs: data.inputs ?? [],
+              outputs: data.outputs ?? [],
+              width: data.width ?? 100,
+              height: data.height ?? 40,
+            },
           },
-        },
-      ];
-    });
-  }, [setNodes]);
+        ];
+      });
+    },
+    [setNodes]
+  );
 
   return (
     <div className="relative h-screen w-screen">

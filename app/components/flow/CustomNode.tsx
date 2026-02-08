@@ -1,8 +1,8 @@
 import { Handle, Position } from '@xyflow/react';
 
-type CustomNodeData = {
-  inputs?: number;
-  outputs?: number;
+export type CustomNodeData = {
+  inputs?: string[];
+  outputs?: string[];
   label?: string;
   width?: number;
   height?: number;
@@ -10,28 +10,37 @@ type CustomNodeData = {
 
 const CustomNode = ({ data }: { data: CustomNodeData }) => {
   const {
-    inputs = 1,
-    outputs = 1,
+    inputs = ['in'],
+    outputs = ['out'],
     label = 'Node',
-    width = 160,
-    height = 80,
+    width = 100,
+    height = 40,
   } = data;
 
   return (
     <div
-      style={{ width, height }}
-      className="rounded-md border bg-white text-xs shadow">
+      style={{ width: Math.max(width, 60), height: Math.max(height, 30) }}
+      className="relative rounded-md border bg-white text-xs shadow px-2">
       {/* Inputs */}
-      {Array.from({ length: inputs }).map((_, i) => (
-        <Handle
-          key={`in-${i}`}
-          type="target"
-          position={Position.Left}
-          id={`in-${i}`}
+      {inputs.map((input, i) => (
+        <div
+          key={input}
+          className="absolute left-0 flex items-center gap-1"
           style={{
-            top: `${((i + 1) / (inputs + 1)) * 100}%`,
-          }}
-        />
+            top: `${((i + 1) / (inputs.length + 1)) * 100}%`,
+            transform: 'translateY(-50%)',
+          }}>
+          <Handle
+            type="target"
+            position={Position.Left}
+            id={`in-${i}`}
+            style={{ left: 0 }}
+          />
+
+          <span className="ml-1.5 text-[0.5rem] text-gray-600 max-w-10 truncate">
+            {input}
+          </span>
+        </div>
       ))}
 
       {/* Content */}
@@ -40,16 +49,25 @@ const CustomNode = ({ data }: { data: CustomNodeData }) => {
       </div>
 
       {/* Outputs */}
-      {Array.from({ length: outputs }).map((_, i) => (
-        <Handle
-          key={`out-${i}`}
-          type="source"
-          position={Position.Right}
-          id={`out-${i}`}
+      {outputs.map((output, i) => (
+        <div
+          key={output}
+          className="absolute right-0 flex items-center gap-1"
           style={{
-            top: `${((i + 1) / (outputs + 1)) * 100}%`,
-          }}
-        />
+            top: `${((i + 1) / (outputs.length + 1)) * 100}%`,
+            transform: 'translateY(-50%)',
+          }}>
+          <span className="mr-1.5 text-[0.5rem] text-gray-600 max-w-10 truncate">
+            {output}
+          </span>
+
+          <Handle
+            type="source"
+            position={Position.Right}
+            id={`out-${i}`}
+            style={{ right: 0 }}
+          />
+        </div>
       ))}
     </div>
   );
